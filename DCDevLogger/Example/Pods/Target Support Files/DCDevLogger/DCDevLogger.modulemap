@@ -1,0 +1,6 @@
+framework module DCDevLogger {
+  umbrella header "DCDevLogger-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "DCDevLogger",
+  "version": "0.1.0",
+  "summary": "A short description of DCDevLogger.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/StrongMetal/DCDevLogger",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "StrongMetal": "miaoy@dachentech.com.cn"
+  },
+  "source": {
+    "git": "https://github.com/StrongMetal/DCDevLogger.git",
+    "tag": "0.1.0"
+  },
+  "xcconfig": {
+    "ENABLE_BITCODE": "NO"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "DCDevLogger/Classes/**/*",
+  "dependencies": {
+    "Aspects": [
+
+    ]
+  }
+}

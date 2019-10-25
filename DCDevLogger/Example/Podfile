@@ -1,0 +1,16 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'DCDevLogger_Example' do
+  pod 'DCDevLogger', :path => '../'
+
+  pod 'Aspects'
+  
+  
+  target 'DCDevLogger_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

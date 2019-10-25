@@ -1,0 +1,24 @@
+PODS:
+  - Aspects (1.4.1)
+  - DCDevLogger (0.1.0):
+    - Aspects
+
+DEPENDENCIES:
+  - Aspects
+  - DCDevLogger (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Aspects
+
+EXTERNAL SOURCES:
+  DCDevLogger:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Aspects: 7595ba96a6727a58ebcbfc954497fc5d2fdde546
+  DCDevLogger: 74f1a19d21be1d66b2c5b86c392d90de8910bbe9
+
+PODFILE CHECKSUM: aed0a1f522a6de45a5a03ac56b446938a474960c
+
+COCOAPODS: 1.7.3
