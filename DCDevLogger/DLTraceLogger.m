@@ -10,8 +10,123 @@
 
 
 
+@interface DLTraceNode : NSObject
+
+@property (nonatomic, strong) UIViewController *stackTopVC;
+@property (nonatomic, copy) NSString *stackTopName;
+
+@property (nonatomic, strong) UINavigationController *navigationController;
+@property (nonatomic, copy) NSString *stackPathIdentifier;
+
+@property (nonatomic, strong) DLTraceNode *nextTraceNode;
+@end
+
+
+@implementation DLTraceNode
+
+- (void)setNavigationController:(UINavigationController *)navigationController {
+    _navigationController = navigationController;
+    
+    NSMutableString *stackLinkString = [NSMutableString new];
+    for (int i = 0; i < navigationController.childViewControllers.count; ++i) {
+        UIViewController *stackVc = navigationController.childViewControllers[i];
+        NSString *nodeClass = NSStringFromClass([stackVc class]);
+        [stackLinkString appendFormat:@"->%@", nodeClass];
+    }
+    _stackPathIdentifier = stackLinkString.copy;
+}
+
+- (void)setStackTopVC:(UIViewController *)stackTopVC {
+    _stackTopVC = stackTopVC;
+    self.navigationController = stackTopVC.navigationController;
+}
+
+@end
+
+
+@interface DLTraceNodeList : NSObject
+
+- (void)dl_addTraceNode:(DLTraceNode *)traceNode;
+- (void)dl_deleteTraceNode:(DLTraceNode *)traceNode;
+
+- (void)dl_printTopstackMsg;
+- (void)dl_printAllNavMessage;
+
+@property (nonatomic, strong) DLTraceNode *traceHeaderNode;
+@property (nonatomic, assign) NSUInteger nodeNum;
+
+@end
+
+@implementation DLTraceNodeList
+
+- (void)dl_addTraceNode:(DLTraceNode *)traceNode {
+    DLTraceNode *nextTraceNode = self.traceHeaderNode;
+    if (!nextTraceNode.nextTraceNode) {
+        nextTraceNode.nextTraceNode = traceNode;
+    } else {
+        traceNode.nextTraceNode = nextTraceNode.nextTraceNode;
+        nextTraceNode.nextTraceNode = traceNode;
+    }
+    self.nodeNum ++;
+}
+
+- (void)dl_deleteTraceNode:(DLTraceNode *)traceNode {
+    DLTraceNode *stayTraceNode = self.traceHeaderNode;
+    
+    while (stayTraceNode) {
+        if ([stayTraceNode.nextTraceNode.stackPathIdentifier isEqualToString:traceNode.stackPathIdentifier]) {
+            stayTraceNode.nextTraceNode = nil;
+        }
+        stayTraceNode = stayTraceNode.nextTraceNode;
+    }
+    
+    self.nodeNum --;
+}
+
+- (DLTraceNode *)dl_getStackTopNode {
+    if (self.nodeNum >= 1) {
+        return self.traceHeaderNode.nextTraceNode;
+    } else {
+        return nil;
+    }
+}
+
+#pragma mark - Logger
+
+- (void)dl_printTopstackMsg {
+    DLTraceNode *topstackNode = [self dl_getStackTopNode];
+    NSLog(@"top-Nav-Stack:%@\ntop-stack-VC -- %@\n", topstackNode.stackPathIdentifier, topstackNode.stackTopName);
+}
+
+- (void)dl_printAllNavMessage {
+    DLTraceNode *presentNode = self.traceHeaderNode.nextTraceNode;
+    if (!presentNode) {
+        return;
+    }
+    NSUInteger counter = 0;
+    while (presentNode) {
+        NSLog(@"%lud-nav-stack%@", counter, presentNode.stackPathIdentifier);
+        counter ++;
+        presentNode = presentNode.nextTraceNode;
+    }
+}
+
+#pragma mark - Getter
+
+- (DLTraceNode *)traceHeaderNode {
+    if (_traceHeaderNode == nil) {
+        _traceHeaderNode = [[DLTraceNode alloc] init];
+    }
+    return _traceHeaderNode;
+}
+
+@end
+
+
+
 @interface DLTraceLogger ()
 
+@property (nonatomic, strong) DLTraceNodeList *nodeList;
 @property (nonatomic, weak) UINavigationController *presentTracedNavigationVC;
 @property (nonatomic, weak) id presentTracedResponder;
 @end
@@ -39,16 +154,19 @@
         //初始化展示页面时会在加载完目标控制器后加载该控制器
         if (![topVc isKindOfClass:NSClassFromString(@"UIInputWindowController")] || ![topVc isKindOfClass:[UINavigationController class]]) {
             [DLTraceLogger traceLogger].presentTracedResponder = topVc;
-            NSLog(@"%@ - hooksuccess", className);
+            DLTraceNode *traceNode = [[DLTraceLogger traceLogger].nodeList dl_getStackTopNode];
+            traceNode.stackTopVC = topVc;
+            traceNode.stackTopName = className;
         }
         
         if ([topVc isKindOfClass:[UINavigationController class]]) {
             [DLTraceLogger traceLogger].presentTracedNavigationVC = (UINavigationController *)topVc;
+            DLTraceNode *node = [[DLTraceNode alloc] init];
+            node.navigationController = (UINavigationController *)topVc;
+            [[DLTraceLogger traceLogger].nodeList dl_addTraceNode: node];
         }
         
-        
-        [self printPresentNavStack];
-        
+        [[DLTraceLogger traceLogger].nodeList dl_printAllNavMessage];
         
     } error:&error];
     
@@ -57,25 +175,12 @@
     }
 }
 
-+ (void)printNavStackOrderByTimestamp {
-    
-}
-
-+ (void)printPresentNavStack {
-    UINavigationController *stackNavVc = [DLTraceLogger traceLogger].presentTracedNavigationVC;
-    
-    NSMutableString *stackLinkString = [NSMutableString new];
-    for (int i = 0; i < stackNavVc.childViewControllers.count; ++i) {
-        UIViewController *stackVc = stackNavVc.childViewControllers[i];
-        NSString *nodeClass = NSStringFromClass([stackVc class]);
-        [stackLinkString appendFormat:@"->%@", nodeClass];
+- (DLTraceNodeList *)nodeList {
+    if (_nodeList == nil) {
+        _nodeList = [[DLTraceNodeList alloc] init];
     }
-    
-    NSLog(@"Present-Nav-Stack:%@", stackLinkString);
-    
+    return _nodeList;
 }
-
-
 
 #else
 
@@ -85,60 +190,6 @@
 
 
 
-@interface DLTraceNode : NSObject
-
-@property (nonatomic, strong) UINavigationController *navigationController;
-@property (nonatomic, copy) NSString *stackPathIdentifier;
-
-@property (nonatomic, strong) DLTraceNode *nextTraceNode;
-@end
-
-
-@implementation DLTraceNode
-@end
-
-
-@interface DLTraceNodeList : NSObject
-
-- (void)dl_addTraceNode:(DLTraceNode *)traceNode;
-- (void)dl_deleteTraceNode:(DLTraceNode *)traceNode;
-
-@property (nonatomic, strong) DLTraceNode *traceHeaderNode;
-
-@end
-
-@implementation DLTraceNodeList
-
-- (void)dl_addTraceNode:(DLTraceNode *)traceNode {
-    DLTraceNode *nextTraceNode = self.traceHeaderNode;
-    while (nextTraceNode) {
-        if (!nextTraceNode.nextTraceNode) {
-            nextTraceNode.nextTraceNode = traceNode;
-        }
-        nextTraceNode = nextTraceNode.nextTraceNode;
-    }
-}
-
-- (void)dl_deleteTraceNode:(DLTraceNode *)traceNode {
-    DLTraceNode *stayTraceNode = self.traceHeaderNode;
-    
-    while (stayTraceNode) {
-        if ([stayTraceNode.nextTraceNode.stackPathIdentifier isEqualToString:traceNode.stackPathIdentifier]) {
-            stayTraceNode.nextTraceNode = nil;
-        }
-        stayTraceNode = stayTraceNode.nextTraceNode;
-    }
-    
-}
-
-- (DLTraceNode *)traceHeaderNode {
-    if (_traceHeaderNode == nil) {
-        _traceHeaderNode = [[DLTraceNode alloc] init];
-    }
-    return _traceHeaderNode;
-}
-
-@end
 
 
 
