@@ -12,10 +12,10 @@
 
 @interface DLTraceNode : NSObject
 
-@property (nonatomic, strong) UIViewController *stackTopVC;
+@property (nonatomic, weak) UIViewController *stackTopVC;
 @property (nonatomic, copy) NSString *stackTopName;
 
-@property (nonatomic, strong) UINavigationController *navigationController;
+@property (nonatomic, weak) UINavigationController *navigationController;
 @property (nonatomic, copy) NSString *stackPathIdentifier;
 
 @property (nonatomic, strong) DLTraceNode *nextTraceNode;
@@ -61,13 +61,28 @@
 
 - (void)dl_addTraceNode:(DLTraceNode *)traceNode {
     DLTraceNode *nextTraceNode = self.traceHeaderNode;
+    self.nodeNum ++;
     if (!nextTraceNode.nextTraceNode) {
         nextTraceNode.nextTraceNode = traceNode;
     } else {
-        traceNode.nextTraceNode = nextTraceNode.nextTraceNode;
-        nextTraceNode.nextTraceNode = traceNode;
+        BOOL repitition = NO;
+        while (nextTraceNode) {
+            DLTraceNode *forwardNode = nextTraceNode.nextTraceNode;
+            if ([traceNode.navigationController isEqual:forwardNode.navigationController]) {
+                repitition = YES;
+                nextTraceNode.nextTraceNode = forwardNode.nextTraceNode;
+                break;
+            }
+            nextTraceNode = forwardNode;
+        }
+        
+        if (!repitition) {
+            self.nodeNum ++;
+        }
+        
+        traceNode.nextTraceNode = self.traceHeaderNode.nextTraceNode;
+        self.traceHeaderNode.nextTraceNode = traceNode;
     }
-    self.nodeNum ++;
 }
 
 - (void)dl_deleteTraceNode:(DLTraceNode *)traceNode {
