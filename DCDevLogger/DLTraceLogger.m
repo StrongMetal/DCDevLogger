@@ -38,7 +38,9 @@
 
 - (void)setStackTopVC:(UIViewController *)stackTopVC {
     _stackTopVC = stackTopVC;
-    self.navigationController = stackTopVC.navigationController;
+    if (stackTopVC.navigationController) {
+        self.navigationController = stackTopVC.navigationController;
+    }
 }
 
 @end
@@ -61,19 +63,22 @@
 
 - (void)dl_addTraceNode:(DLTraceNode *)traceNode {
     DLTraceNode *nextTraceNode = self.traceHeaderNode;
-    self.nodeNum ++;
     if (!nextTraceNode.nextTraceNode) {
         nextTraceNode.nextTraceNode = traceNode;
+        self.nodeNum ++;
     } else {
         BOOL repitition = NO;
         while (nextTraceNode) {
-            DLTraceNode *forwardNode = nextTraceNode.nextTraceNode;
-            if ([traceNode.navigationController isEqual:forwardNode.navigationController]) {
-                repitition = YES;
-                nextTraceNode.nextTraceNode = forwardNode.nextTraceNode;
-                break;
+            @autoreleasepool {
+                DLTraceNode *forwardNode = nextTraceNode.nextTraceNode;
+
+                if ([forwardNode.navigationController isEqual:traceNode.navigationController]) {
+                    repitition = YES;
+                    nextTraceNode.nextTraceNode = forwardNode.nextTraceNode;
+                    break;
+                }
+                nextTraceNode = forwardNode;
             }
-            nextTraceNode = forwardNode;
         }
         
         if (!repitition) {
@@ -120,7 +125,7 @@
     }
     NSUInteger counter = 0;
     while (presentNode) {
-        NSLog(@"%lud-nav-stack%@", counter, presentNode.stackPathIdentifier);
+        NSLog(@"%ld-nav-stack%@\n", counter, presentNode.stackPathIdentifier);
         counter ++;
         presentNode = presentNode.nextTraceNode;
     }
@@ -167,11 +172,14 @@
         UIViewController *topVc = (UIViewController *)instance;
         
         //初始化展示页面时会在加载完目标控制器后加载该控制器
-        if (![topVc isKindOfClass:NSClassFromString(@"UIInputWindowController")] || ![topVc isKindOfClass:[UINavigationController class]]) {
+        if (![topVc isKindOfClass:NSClassFromString(@"UIInputWindowController")] && ![topVc isKindOfClass:[UINavigationController class]]) {
             [DLTraceLogger traceLogger].presentTracedResponder = topVc;
             DLTraceNode *traceNode = [[DLTraceLogger traceLogger].nodeList dl_getStackTopNode];
             traceNode.stackTopVC = topVc;
             traceNode.stackTopName = className;
+            
+            [[DLTraceLogger traceLogger].nodeList dl_printTopstackMsg];
+            [[DLTraceLogger traceLogger].nodeList dl_printAllNavMessage];
         }
         
         if ([topVc isKindOfClass:[UINavigationController class]]) {
@@ -180,8 +188,6 @@
             node.navigationController = (UINavigationController *)topVc;
             [[DLTraceLogger traceLogger].nodeList dl_addTraceNode: node];
         }
-        
-        [[DLTraceLogger traceLogger].nodeList dl_printAllNavMessage];
         
     } error:&error];
     
