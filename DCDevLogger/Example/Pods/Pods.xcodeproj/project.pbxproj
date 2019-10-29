@@ -17,8 +17,6 @@
 		724C6F3FFEE834611903385ACED9A65F /* Aspects-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9266E4E5570CFB197033222506CF40A6 /* Aspects-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		967FFA57FBE772C74F0E84BE5CE1B98D /* DCDevLogger-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD11F53D43F32A88CF87F2F8FFD3502 /* DCDevLogger-dummy.m */; };
 		A954361B6A6FD111452CB9DABC9B30F7 /* Aspects-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AB1FBB0F73DDA116F07FD1377DB77D /* Aspects-dummy.m */; };
-		CB3E694A2362CA5700E2FAC7 /* DLTraceDataModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CB3E69482362CA5700E2FAC7 /* DLTraceDataModel.h */; };
-		CB3E694B2362CA5700E2FAC7 /* DLTraceDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CB3E69492362CA5700E2FAC7 /* DLTraceDataModel.m */; };
 		CBCDBC38236181C800008B73 /* DLTraceLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = CBCDBC36236181C800008B73 /* DLTraceLogger.h */; };
 		CBCDBC39236181C800008B73 /* DLTraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCDBC37236181C800008B73 /* DLTraceLogger.m */; };
 		D29807C0AF15AB9973D93D1416EF37EB /* Aspects.h in Headers */ = {isa = PBXBuildFile; fileRef = 648AA24DD9A5CD165B180E19CEBE892F /* Aspects.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -91,8 +89,6 @@
 		A322A801055E9CBAC9A568F4D568BE79 /* DCDevLogger.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DCDevLogger.xcconfig; sourceTree = "<group>"; };
 		A75F1C30EA69E0BBE37088A916C9AB5F /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		BECBB1CF0E2EB7EA51F0D7AA418A33D6 /* Aspects-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Aspects-prefix.pch"; sourceTree = "<group>"; };
-		CB3E69482362CA5700E2FAC7 /* DLTraceDataModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DLTraceDataModel.h; sourceTree = "<group>"; };
-		CB3E69492362CA5700E2FAC7 /* DLTraceDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DLTraceDataModel.m; sourceTree = "<group>"; };
 		CBCDBC36236181C800008B73 /* DLTraceLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DLTraceLogger.h; sourceTree = "<group>"; };
 		CBCDBC37236181C800008B73 /* DLTraceLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DLTraceLogger.m; sourceTree = "<group>"; };
 		CCD4B1371D1BA7C758A71FF0B6FD7D89 /* Pods-DCDevLogger_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DCDevLogger_Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -215,8 +211,6 @@
 		7F9F29A3D8CD67CAC2D6F5BA20703DF4 /* DCDevLogger */ = {
 			isa = PBXGroup;
 			children = (
-				CB3E69482362CA5700E2FAC7 /* DLTraceDataModel.h */,
-				CB3E69492362CA5700E2FAC7 /* DLTraceDataModel.m */,
 				CBCDBC36236181C800008B73 /* DLTraceLogger.h */,
 				CBCDBC37236181C800008B73 /* DLTraceLogger.m */,
 				5EE3BD689276F8BFEBD179196B69752B /* Pod */,
@@ -337,7 +331,6 @@
 			files = (
 				CBCDBC38236181C800008B73 /* DLTraceLogger.h in Headers */,
 				724C6F3FFEE834611903385ACED9A65F /* Aspects-umbrella.h in Headers */,
-				CB3E694A2362CA5700E2FAC7 /* DLTraceDataModel.h in Headers */,
 				D29807C0AF15AB9973D93D1416EF37EB /* Aspects.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,7 +498,6 @@
 				CBCDBC39236181C800008B73 /* DLTraceLogger.m in Sources */,
 				A954361B6A6FD111452CB9DABC9B30F7 /* Aspects-dummy.m in Sources */,
 				F51A21D307B9275272758FF324F60B91 /* Aspects.m in Sources */,
-				CB3E694B2362CA5700E2FAC7 /* DLTraceDataModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

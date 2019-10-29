@@ -153,6 +153,7 @@
 
 @implementation DLTraceLogger
 
+#ifdef DEBUG
 + (instancetype)traceLogger {
     static DLTraceLogger *_traceLogger;
     static dispatch_once_t onceToken;
@@ -162,7 +163,6 @@
     return _traceLogger;
 }
 
-#ifdef DEBUG
 + (void)load {
     NSError *error = nil;
     [UIViewController aspect_hookSelector:@selector(viewDidAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo>aspectInfo) {
@@ -178,8 +178,8 @@
             traceNode.stackTopVC = topVc;
             traceNode.stackTopName = className;
             
-            [[DLTraceLogger traceLogger].nodeList dl_printTopstackMsg];
             [[DLTraceLogger traceLogger].nodeList dl_printAllNavMessage];
+            [[DLTraceLogger traceLogger].nodeList dl_printTopstackMsg];
         }
         
         if ([topVc isKindOfClass:[UINavigationController class]]) {
