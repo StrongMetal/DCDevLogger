@@ -24,7 +24,7 @@ TODO: Add long description of the pod here.
   s.homepage         = 'https://github.com/StrongMetal/DCDevLogger'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'StrongMetal' => 'miaoy@dachentech.com.cn' }
+  s.author           = { 'StrongMetal' => 'miaoy@163.com.cn' }
   s.source           = { :git => 'https://github.com/StrongMetal/DCDevLogger.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   
@@ -32,7 +32,7 @@ TODO: Add long description of the pod here.
     'ENABLE_BITCODE' => 'NO'
   }
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'DCDevLogger/Classes/**/*'
   
