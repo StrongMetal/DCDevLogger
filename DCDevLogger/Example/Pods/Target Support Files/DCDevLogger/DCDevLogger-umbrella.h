@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "NSObject+deepCopy.h"
 
 FOUNDATION_EXPORT double DCDevLoggerVersionNumber;
 FOUNDATION_EXPORT const unsigned char DCDevLoggerVersionString[];
